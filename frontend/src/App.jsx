@@ -16,7 +16,7 @@ function App() {
     queryFn: async () => {
       try {
         const res = await fetch("/api/auth/check");
-        const data = res.json();
+        const data = await res.json();
         if (data.error) return null;
         if (!res.ok) {
           throw new Error(data.error || "Something went wrong");
