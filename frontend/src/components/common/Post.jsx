@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import LoadingSpinner from "./LoadingSpinner";
+import { formatPostDate } from "../../utils/db/date";
 
 const Post = ({ post }) => {
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
@@ -16,12 +17,9 @@ const Post = ({ post }) => {
   const postOwner = post.user;
 
   const isLiked = post.likes.includes(authUser._id);
-  console.log(isLiked);
   const isMyPost = authUser._id === post.user._id;
 
-  const formattedDate = "1h";
-
-  const isCommenting = false;
+  const formattedDate = formatPostDate(post.createdAt);
 
   const { mutate: deletePost, isPending: isDeleting } = useMutation({
     mutationFn: async () => {
@@ -60,27 +58,48 @@ const Post = ({ post }) => {
         throw new Error(error);
       }
     },
-    onSuccess: (updatedLikes) => {
-      queryClient.setQueryData(["posts"], (oldData) => {
-        if (!oldData) return oldData;
-        return oldData.map((p) => {
-          if (p._id === post._id) {
-            return { ...p, likes: updatedLikes };
-          }
-          return p;
-        });
-      });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
     onError: (error) => {
       toast.error(error.message);
     },
   });
 
-  const handleDeletePost = () => {
-    deletePost();
-  };
+  const { mutate: commentPost, isPending: isCommenting } = useMutation({
+    mutationFn: async () => {
+      try {
+        const res = await fetch(`/api/posts/comment/${post._id}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text: comment }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || "Something went wrong");
+        }
+        return data;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Comment posted successfully");
+      setComment("");
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   const handlePostComment = (e) => {
     e.preventDefault();
+    if (isCommenting) return;
+    commentPost();
   };
 
   const handleLikePost = () => {
@@ -116,7 +135,7 @@ const Post = ({ post }) => {
                 {!isDeleting && (
                   <FaTrash
                     className="cursor-pointer hover:text-red-500"
-                    onClick={handleDeletePost}
+                    onClick={() => deletePost()}
                   />
                 )}
 
@@ -229,8 +248,8 @@ const Post = ({ post }) => {
                 )}
 
                 <span
-                  className={`text-sm text-slate-500 group-hover:text-pink-500 ${
-                    isLiked ? "text-pink-500" : ""
+                  className={`text-sm group-hover:text-pink-500 ${
+                    isLiked ? "text-pink-500" : "text-slate-500"
                   }`}
                 >
                   {post.likes.length}
