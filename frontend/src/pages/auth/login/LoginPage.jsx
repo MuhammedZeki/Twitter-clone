@@ -16,7 +16,12 @@ const LoginPage = () => {
     username: "",
     password: "",
   });
-
+  const testLogin = () => {
+    setFormData({
+      username: "MuhammedZeki__",
+      password: "123456",
+    });
+  };
   const {
     mutate: loginMutation,
     isPending,
@@ -91,6 +96,12 @@ const LoginPage = () => {
           </label>
           <button className="btn rounded-full btn-primary text-white">
             {isPending ? "Loading..." : "Login"}
+          </button>
+          <button
+            onClick={testLogin}
+            className="btn rounded-full btn-primary text-white btn-outline w-full"
+          >
+            Test Login
           </button>
           {isError && <p className="text-red-500">{error.message}</p>}
         </form>
