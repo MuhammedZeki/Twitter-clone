@@ -1,21 +1,23 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+
 import { FaRegComment } from "react-icons/fa";
 import { BiRepost } from "react-icons/bi";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa6";
 import { FaTrash } from "react-icons/fa";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { toast } from "react-toastify";
 import LoadingSpinner from "./LoadingSpinner";
 import { formatPostDate } from "../../utils/db/date";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const Post = ({ post }) => {
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
   const queryClient = useQueryClient();
   const [comment, setComment] = useState("");
-  const postOwner = post.user;
 
+  const postOwner = post.user;
   const isLiked = post.likes.includes(authUser._id);
   const isMyPost = authUser._id === post.user._id;
 

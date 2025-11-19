@@ -6,13 +6,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 const CreatePost = () => {
+  const queryClient = useQueryClient();
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
-
   const imgRef = useRef(null);
-
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
-  const queryClient = useQueryClient();
 
   const {
     mutate: createPost,
@@ -38,7 +36,6 @@ const CreatePost = () => {
         throw new Error(error);
       }
     },
-
     onSuccess: () => {
       setText("");
       setImg(null);

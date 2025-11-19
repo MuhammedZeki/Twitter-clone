@@ -9,20 +9,25 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+
 import { useQuery } from "@tanstack/react-query";
 import { formatMemberSinceDate } from "../../utils/db/date";
+
 import useFollow from "../../hooks/useFollow";
 import useUpdateUserProfile from "../../hooks/useUpdateUserProfile";
 
 const ProfilePage = () => {
   const [coverImg, setCoverImg] = useState(null);
   const [profileImg, setProfileImg] = useState(null);
+  const coverImgRef = useRef(null);
+  const profileImgRef = useRef(null);
   const [feedType, setFeedType] = useState("posts");
 
   const { follow, isPending } = useFollow();
-
   const { username } = useParams();
+
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
+
   const { data: post } = useQuery({
     queryKey: ["posts", feedType],
     queryFn: async () => {
@@ -40,8 +45,6 @@ const ProfilePage = () => {
       }
     },
   });
-  const coverImgRef = useRef(null);
-  const profileImgRef = useRef(null);
 
   const { data: user, isLoading } = useQuery({
     queryKey: ["userProfile", username],

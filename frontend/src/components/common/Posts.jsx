@@ -1,5 +1,7 @@
 import Post from "./Post";
+
 import PostSkeleton from "../skeletons/PostSkeleton";
+
 import { useQuery } from "@tanstack/react-query";
 
 const Posts = ({ feedType, username, userId }) => {
@@ -18,6 +20,7 @@ const Posts = ({ feedType, username, userId }) => {
     }
   };
   const POST_ENDPOINT = getPostEndpoint();
+
   const { data: posts, isLoading } = useQuery({
     queryKey: ["posts", feedType, username],
     queryFn: async () => {

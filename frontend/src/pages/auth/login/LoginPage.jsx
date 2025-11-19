@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import XSvg from "../../../components/svgs/X";
-
 import { MdOutlineMail } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import XSvg from "../../../components/svgs/X";
+
 import { toast } from "react-toastify";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const LoginPage = () => {
+  const queryClient = useQueryClient();
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
-  const queryClient = useQueryClient();
 
   const {
     mutate: loginMutation,
