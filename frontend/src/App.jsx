@@ -9,6 +9,7 @@ import NotificationPage from "./pages/notification/NotificationPage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "./components/common/LoadingSpinner";
+import BottomBar from "./components/common/BottomBar";
 
 function App() {
   const { data: authUser, isLoading } = useQuery({
@@ -38,6 +39,7 @@ function App() {
   return (
     <div className="flex max-w-6xl mx-auto">
       {authUser && <Sidebar />}
+      {authUser && <BottomBar />}
       <Routes>
         <Route
           path="/"

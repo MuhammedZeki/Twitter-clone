@@ -1,12 +1,16 @@
 import { useState } from "react";
 import CreatePost from "./CreatePost";
 import Posts from "../../components/common/Posts";
+import XSvg from "../../components/svgs/X";
 
 const HomePage = () => {
   const [feedType, setFeedType] = useState("forYou");
 
   return (
     <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen">
+      <div className="md:hidden flex items-center gap-2 justify-center">
+        <XSvg className="px-2 w-12 h-12 rounded-full fill-white hover:bg-stone-900" />
+      </div>
       <div className="flex w-full border-b border-gray-700">
         <div
           className={
