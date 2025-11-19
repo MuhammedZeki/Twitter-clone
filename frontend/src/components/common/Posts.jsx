@@ -2,20 +2,24 @@ import Post from "./Post";
 import PostSkeleton from "../skeletons/PostSkeleton";
 import { useQuery } from "@tanstack/react-query";
 
-const Posts = ({ feedType }) => {
+const Posts = ({ feedType, username, userId }) => {
   const getPostEndpoint = () => {
     switch (feedType) {
       case "forYou":
         return "/api/posts/all";
       case "following":
         return "/api/posts/following";
+      case "posts":
+        return `/api/posts/user/${username}`;
+      case "likes":
+        return `/api/posts/likes/${userId}`;
       default:
         return "/api/posts/all";
     }
   };
   const POST_ENDPOINT = getPostEndpoint();
   const { data: posts, isLoading } = useQuery({
-    queryKey: ["posts", feedType],
+    queryKey: ["posts", feedType, username],
     queryFn: async () => {
       try {
         const res = await fetch(POST_ENDPOINT);
